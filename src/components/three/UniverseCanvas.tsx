@@ -1,8 +1,31 @@
-import React from 'react';
-import { Canvas } from '@react-three/fiber';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
+import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
 import { useUniverseStore } from '../../store/useUniverseStore';
 import { StylizedCharacter } from './StylizedCharacter';
+
+function useIsCompact() {
+  const [compact, setCompact] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches
+  );
+  useEffect(() => {
+    const q = window.matchMedia('(max-width: 767px)');
+    const onChange = () => setCompact(q.matches);
+    q.addEventListener('change', onChange);
+    return () => q.removeEventListener('change', onChange);
+  }, []);
+  return compact;
+}
+
+function AdaptiveCamera({ compact }: { compact: boolean }) {
+  const { camera } = useThree();
+  useLayoutEffect(() => {
+    camera.fov = compact ? 58 : 48;
+    camera.position.set(0, compact ? 4.1 : 3.2, compact ? 11.5 : 8.5);
+    camera.updateProjectionMatrix();
+  }, [camera, compact]);
+  return null;
+}
 
 export const UniverseCanvas: React.FC = () => {
   const {
@@ -23,18 +46,38 @@ export const UniverseCanvas: React.FC = () => {
     openModal,
   } = useUniverseStore();
 
+  const compact = useIsCompact();
+
   return (
     <Canvas
-      shadows
-      camera={{ position: [0, 3.2, 8.5], fov: 48 }}
-      gl={{ antialias: true, powerPreference: 'high-performance' }}
+      shadows={!compact}
+      dpr={compact ? [1, 1.25] : [1, 1.75]}
+      camera={{ position: [0, compact ? 4.1 : 3.2, compact ? 11.5 : 8.5], fov: compact ? 58 : 48 }}
+      gl={{ antialias: !compact, powerPreference: compact ? 'low-power' : 'high-performance' }}
     >
+      <AdaptiveCamera compact={compact} />
       <color attach="background" args={[currentScene >= 6 ? '#1d1536' : '#070918']} />
       <fog attach="fog" args={[currentScene >= 6 ? '#2a1b3d' : '#070918', 8, 28]} />
       <ambientLight intensity={currentScene >= 6 ? 0.85 : 0.45} />
-      <directionalLight position={[5, 10, 5]} intensity={1.1} color="#ffd280" castShadow />
-      <Stars radius={40} depth={30} count={2500} factor={3.5} saturation={0.5} fade speed={1} />
-      <OrbitControls enablePan={false} maxPolarAngle={Math.PI / 2.05} minDistance={4} maxDistance={16} />
+      <directionalLight position={[5, 10, 5]} intensity={1.1} color="#ffd280" castShadow={!compact} />
+      <Stars
+        radius={40}
+        depth={30}
+        count={compact ? 900 : 2500}
+        factor={compact ? 2.6 : 3.5}
+        saturation={0.5}
+        fade
+        speed={1}
+      />
+      <OrbitControls
+        enablePan={false}
+        enableZoom={false}
+        enableDamping
+        maxPolarAngle={Math.PI / 2.05}
+        minDistance={compact ? 5.5 : 4}
+        maxDistance={compact ? 18 : 16}
+        rotateSpeed={compact ? 0.65 : 1}
+      />
 
       {/* Scene 1: Distant Glowing Planet */}
       {currentScene === 1 && (

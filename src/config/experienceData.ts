@@ -93,6 +93,7 @@ export interface ExperienceConfig {
     openFinalLetter: Bi;
     backToBridge: Bi;
     lowPowerNote: Bi;
+    rotateHint: Bi;
   };
   scene1: {
     openingLine1: Bi;
@@ -182,6 +183,10 @@ export const defaultExperienceData: ExperienceConfig = {
     lowPowerNote: {
       en: '2D starlight mode on (3D paused for battery)',
       vi: 'chế độ sao 2D (tắt 3D cho đỡ tốn pin)',
+    },
+    rotateHint: {
+      en: 'drag the empty sky to rotate babe ✨',
+      vi: 'kéo chỗ trời trống để xoay nha babe ✨',
     },
   },
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
+import { PerspectiveCamera } from 'three';
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
 import { useUniverseStore } from '../../store/useUniverseStore';
@@ -20,6 +21,7 @@ function useIsCompact() {
 function AdaptiveCamera({ compact }: { compact: boolean }) {
   const { camera } = useThree();
   useLayoutEffect(() => {
+    if (!(camera instanceof PerspectiveCamera)) return;
     camera.fov = compact ? 58 : 48;
     camera.position.set(0, compact ? 4.1 : 3.2, compact ? 11.5 : 8.5);
     camera.updateProjectionMatrix();

@@ -161,13 +161,13 @@ export const defaultExperienceData: ExperienceConfig = {
       vi: 'một vũ trụ nhỏ cho Linh',
     },
     sceneTitles: {
-      1: { en: 'I. the invitation', vi: 'I. lời mời' },
-      2: { en: 'II. the distance between us', vi: 'II. khoảng cách giữa mình' },
-      3: { en: 'III. memory garden', vi: 'III. vườn nhớ' },
-      4: { en: 'IV. collect the little things', vi: 'IV. nhặt những thứ nhỏ' },
-      5: { en: 'V. unsent letters', vi: 'V. thư chưa gửi' },
-      6: { en: 'VI. our future little world', vi: 'VI. thế giới nhỏ sau này' },
-      7: { en: 'VII. the final meeting', vi: 'VII. lần gặp cuối' },
+      1: { en: 'I. the beginning of our universe', vi: 'I. khởi đầu vũ trụ mình' },
+      2: { en: 'II. two little worlds', vi: 'II. hai thế giới nhỏ' },
+      3: { en: 'III. the garden of little memories', vi: 'III. vườn kỷ niệm nhỏ' },
+      4: { en: 'IV. the little things', vi: 'IV. những thứ nhỏ' },
+      5: { en: 'V. the room of unsent letters', vi: 'V. phòng thư chưa gửi' },
+      6: { en: 'VI. our little future', vi: 'VI. tương lai nhỏ của mình' },
+      7: { en: 'VII. a universe just for you', vi: 'VII. vũ trụ chỉ cho em' },
     },
     soundOn: { en: 'sound: on', vi: 'âm thanh: bật' },
     soundMuted: { en: 'sound: muted', vi: 'âm thanh: tắt' },
@@ -211,8 +211,8 @@ export const defaultExperienceData: ExperienceConfig = {
       vi: 'nếu anh bỏ hết từng km giữa hà nội và đây\nanh đã ở đó rồi\nchờ như anh đã hứa 🥺',
     },
     subtitle: {
-      en: 'drag around. click each star. its our little bridge',
-      vi: 'kéo xem. bấm từng ngôi sao. cầu nhỏ của mình đó',
+      en: 'two little worlds. tap each star on the bridge — a real memory lights the path',
+      vi: 'hai thế giới nhỏ. chạm từng sao trên cầu — một kỷ niệm thật sẽ sáng đường',
     },
     stars: [
       {
@@ -431,8 +431,8 @@ export const defaultExperienceData: ExperienceConfig = {
       vi: 'nhặt những thứ nhỏ',
     },
     instructions: {
-      en: 'wasd / arrows / tap the meadow. grab all 5 glowing things babe',
-      vi: 'wasd / mũi tên / chạm bãi cỏ. lấy đủ 5 thứ phát sáng babe',
+      en: 'wander the moonlit meadow. tap each keepsake — they drift in when you find them',
+      vi: 'dạo bãi cỏ dưới trăng. chạm từng kỷ vật — chúng sẽ bay vào khi em tìm thấy',
     },
     chestTitle: {
       en: 'a starfield in glass',

@@ -34,6 +34,15 @@ export default function App() {
     closeModal,
     markStarVisited,
     markGardenItem,
+    markLetterRead,
+    markDoorVisited,
+    collectGameItem,
+    openChest,
+    visitedStars,
+    discoveredGardenItems,
+    collectedGameItems,
+    readLetters,
+    visitedDoors,
   } = useUniverseStore();
 
   const handleNextScene = () => {
@@ -46,9 +55,13 @@ export default function App() {
 
   const ui = config.ui;
   const overlayCard =
-    'bg-slate-950/70 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-white/10 p-3 sm:p-5 md:p-8';
+    'bg-slate-950/50 backdrop-blur-md rounded-2xl border border-white/10 px-3 py-2 sm:px-4 sm:py-3';
   const chip =
-    'text-[11px] sm:text-xs px-2.5 sm:px-3 py-1 rounded-full bg-white/10 hover:bg-amber-300/30 text-amber-100 transition leading-tight max-w-full';
+    'text-[10px] sm:text-[11px] px-2 sm:px-2.5 py-0.5 rounded-full bg-white/10 hover:bg-amber-300/30 text-amber-100 transition leading-tight max-w-full';
+  const quote = 'font-serif text-sm sm:text-base text-pink-100 whitespace-pre-line line-clamp-4 sm:line-clamp-5';
+  const foundGarden = discoveredGardenItems.length;
+  const foundThings = collectedGameItems.length;
+  const totalThings = config.scene4.collectibles.length;
 
   const keepScroll = {
     onWheel: (e: React.WheelEvent) => e.stopPropagation(),
@@ -115,42 +128,44 @@ export default function App() {
       </header>
 
       <main className="relative z-10 pointer-events-none flex flex-col flex-1 min-h-0 px-3 py-3 sm:p-6 gap-3">
-        <div className="flex-1 min-h-0 flex flex-col items-center pointer-events-none">
+        <div className="shrink-0 flex flex-col items-center pointer-events-none">
         <AnimatePresence mode="wait">
           <motion.div
             key={`${currentScene}-${lang}`}
-            initial={{ opacity: 0, y: reducedMotion ? 0 : 12 }}
+            initial={{ opacity: 0, y: reducedMotion ? 0 : 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="lu-scroll w-full max-w-xl mx-auto text-center pointer-events-auto max-h-full"
+            className="lu-scroll w-full max-w-md mx-auto text-center pointer-events-auto max-h-[28dvh] sm:max-h-[30dvh]"
             {...keepScroll}
           >
             {currentScene === 1 && (
-              <div className={`${overlayCard} space-y-3 sm:space-y-6`}>
-                <p className="font-serif text-lg sm:text-2xl md:text-3xl leading-relaxed text-pink-100 whitespace-pre-line">
-                  {tBlock(config.scene1.openingLine1, lang)}
-                </p>
-                <p className="font-serif italic text-base sm:text-xl text-amber-200 whitespace-pre-line">
-                  {tBlock(config.scene1.openingLine2, lang)}
-                </p>
-                <button
-                  onClick={handleNextScene}
-                  className="mt-1 sm:mt-4 w-full sm:w-auto px-6 sm:px-7 py-2.5 sm:py-3 rounded-full bg-gradient-to-r from-pink-400/80 to-amber-300/80 text-slate-950 font-medium shadow-lg hover:scale-105 transition text-sm sm:text-base"
+              <div className={`${overlayCard} space-y-1.5`}>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: reducedMotion ? 0 : 1.4 }}
+                  className="font-serif italic text-sm sm:text-lg text-amber-200 whitespace-pre-line"
                 >
-                  {tLine(config.scene1.ctaButton, lang)}
-                </button>
+                  {tBlock(config.scene1.openingLine2, lang)}
+                </motion.p>
+                <p className="font-sans text-[10px] sm:text-xs text-slate-300">
+                  {lang === 'vi' ? 'chạm một ngôi sao sáng để mở câu chuyện' : lang === 'en' ? 'tap a glowing star to open the next line of the story' : 'tap a glowing star · chạm ngôi sao sáng'}
+                </p>
               </div>
             )}
 
             {currentScene === 2 && (
               <div className={overlayCard}>
-                <p className="font-serif text-lg sm:text-xl md:text-2xl text-pink-100 whitespace-pre-line">
+                <p className={quote}>
                   {tBlock(config.scene2.quote, lang)}
                 </p>
-                <p className="text-[11px] sm:text-xs text-slate-300 mt-2 whitespace-pre-line">
+                <p className="font-sans text-[11px] sm:text-xs text-slate-300 mt-2 whitespace-pre-line">
                   {tBlock(config.scene2.subtitle, lang)}
                 </p>
-                <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mt-3">
+                <p className="font-sans text-[11px] text-amber-100/80 mt-1">
+                  {visitedStars.length} / {config.scene2.stars.length}
+                </p>
+                <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mt-2">
                   {config.scene2.stars.map((s) => (
                     <button
                       key={s.id}
@@ -169,10 +184,14 @@ export default function App() {
 
             {currentScene === 3 && (
               <div className={overlayCard}>
-                <p className="font-serif text-lg sm:text-xl text-pink-100 whitespace-pre-line">
+                <p className={quote}>
                   {tBlock(config.scene3.completionQuote, lang)}
                 </p>
-                <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mt-3">
+                <p className="font-sans text-[11px] text-amber-100/80 mt-1">
+                  {foundGarden} / {config.scene3.items.length}
+                  {foundGarden >= config.scene3.items.length ? (lang === 'vi' ? ' · vườn sáng hết rồi' : ' · the garden is lit') : ''}
+                </p>
+                <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mt-2">
                   {config.scene3.items.map((item) => (
                     <button
                       key={item.id}
@@ -191,18 +210,30 @@ export default function App() {
 
             {currentScene === 4 && (
               <div className={overlayCard}>
-                <h2 className="font-serif text-xl sm:text-2xl text-amber-200">{tLine(config.scene4.title, lang)}</h2>
-                <p className="text-[11px] sm:text-xs text-slate-300 mt-1 whitespace-pre-line">
+                <h2 className="font-serif text-base sm:text-lg text-amber-200">{tLine(config.scene4.title, lang)}</h2>
+                <p className="font-sans text-[11px] sm:text-xs text-slate-300 mt-1 whitespace-pre-line">
                   {tBlock(config.scene4.instructions, lang)}
                 </p>
-                <p className="text-[11px] sm:text-xs text-amber-100/80 mt-2 whitespace-pre-line">
-                  {tBlock(config.scene4.chestMessage, lang)}
+                <p className="font-sans text-xs sm:text-sm text-amber-100 mt-2">
+                  {foundThings} of {totalThings} little things found
+                  {lang !== 'en' ? ` · tìm được ${foundThings} / ${totalThings}` : ''}
                 </p>
-                <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mt-3">
+                {foundThings >= totalThings && (
+                  <p className="text-[11px] sm:text-xs text-amber-100/80 mt-1 whitespace-pre-line">
+                    {tBlock(config.scene4.chestMessage, lang)}
+                  </p>
+                )}
+                <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mt-2">
                   {config.scene4.collectibles.map((c) => (
                     <button
                       key={c.id}
-                      onClick={() => openModal({ title: c.name, body: c.message })}
+                      onClick={() => {
+                        collectGameItem(c.id);
+                        if (collectedGameItems.length + (collectedGameItems.includes(c.id) ? 0 : 1) >= totalThings) {
+                          openChest();
+                        }
+                        openModal({ title: c.name, body: c.message });
+                      }}
                       className={chip}
                     >
                       ✦ {tLine(c.name, lang)}
@@ -214,17 +245,22 @@ export default function App() {
 
             {currentScene === 5 && (
               <div className={overlayCard}>
-                <h2 className="font-serif text-xl sm:text-2xl text-pink-100">{tLine(config.scene5.roomTitle, lang)}</h2>
-                <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mt-3">
+                <h2 className="font-serif text-base sm:text-lg text-pink-100">{tLine(config.scene5.roomTitle, lang)}</h2>
+                <p className="font-sans text-[11px] text-slate-300 mt-1">
+                  {lang === 'vi' ? 'mở thư theo thứ tự em muốn. thư tay để cuối.' : 'open the letters in any order. save the handwritten one for last.'}
+                </p>
+                <p className="font-sans text-[11px] text-amber-100/80">{readLetters.length} / {config.scene5.letters.length}</p>
+                <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mt-2">
                   {config.scene5.letters.map((l) => (
                     <button
                       key={l.id}
-                      onClick={() =>
+                      onClick={() => {
+                        markLetterRead(l.id);
                         openModal({
                           title: l.title,
                           body: { en: letterBody(l, 'en'), vi: letterBody(l, 'vi') },
-                        })
-                      }
+                        });
+                      }}
                       className={chip}
                     >
                       ✉ {tLine(l.title, lang)}
@@ -236,24 +272,24 @@ export default function App() {
 
             {currentScene === 6 && (
               <div className={overlayCard}>
-                <p className="font-serif text-lg sm:text-xl text-amber-100 whitespace-pre-line">
+                <p className={`${quote} text-amber-100`}>
                   {tBlock(config.scene6.quoteLine1, lang)}
-                  {'\n'}
-                  {tBlock(config.scene6.quoteLine2, lang)}
                 </p>
-                <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mt-3">
+                <p className="font-sans text-[11px] text-amber-100/80 mt-1">{visitedDoors.length} / {config.scene6.doorways.length}</p>
+                <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mt-2">
                   {config.scene6.doorways.map((d) => (
                     <button
                       key={d.id}
-                      onClick={() =>
+                      onClick={() => {
+                        markDoorVisited(d.id);
                         openModal({
                           title: d.title,
                           body: {
                             en: `${d.dreamDescription.en}\n\n${d.personalNotePlaceholder.en}`,
                             vi: `${d.dreamDescription.vi}\n\n${d.personalNotePlaceholder.vi}`,
                           },
-                        })
-                      }
+                        });
+                      }}
                       className={chip}
                     >
                       🚪 {tLine(d.label, lang)}
@@ -265,9 +301,14 @@ export default function App() {
 
             {currentScene === 7 && (
               <div className={overlayCard}>
-                <h2 className="font-serif text-xl sm:text-2xl text-amber-200 whitespace-pre-line">
+                <h2 className="font-serif text-base sm:text-lg text-amber-200 whitespace-pre-line">
                   {giftOpened ? `★ ${config.herName.toUpperCase()} ★` : tBlock(config.scene7.giftPrompt, lang)}
                 </h2>
+                {giftOpened && (
+                  <p className="font-sans text-[11px] sm:text-xs text-slate-300 mt-1">
+                    {lang === 'vi' ? 'em chọn lúc mở thư cuối.' : 'open the final letter whenever you are ready.'}
+                  </p>
+                )}
                 <button
                   onClick={() => setFinalLetterOpen(true)}
                   className="mt-3 w-full sm:w-auto px-6 py-2.5 rounded-full bg-gradient-to-r from-pink-400 to-amber-300 text-slate-950 font-medium text-sm"
@@ -279,6 +320,7 @@ export default function App() {
           </motion.div>
         </AnimatePresence>
         </div>
+        <div className="flex-1 min-h-0 pointer-events-none" />
 
         {!lowPowerMode && !activeModal && !finalLetterOpen && (
           <p className="pointer-events-none shrink-0 text-center text-[11px] sm:text-xs text-amber-100/80 drop-shadow-[0_1px_8px_rgba(0,0,0,0.8)] px-3 whitespace-pre-line">

@@ -70,7 +70,7 @@ function AnimatedPlanet() {
   useFrame(({ clock }) => {
     if (planet.current) {
       planet.current.rotation.y = clock.elapsedTime * 0.06;
-      planet.current.position.y = 0.8 + Math.sin(clock.elapsedTime * 0.45) * 0.12;
+      planet.current.position.y = Math.sin(clock.elapsedTime * 0.45) * 0.12;
     }
     if (ring.current) ring.current.rotation.z = 0.12 + Math.sin(clock.elapsedTime * 0.2) * 0.06;
   });

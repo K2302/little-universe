@@ -103,6 +103,14 @@ function FloatingIsland({ position, tint }: {
   position: [number, number, number];
   tint: string;
 }) {
+  const tufts: [number, number, number, number][] = [
+    [-0.9, 0.52, 0.45, 0.36],
+    [-0.25, 0.52, -0.72, 0.25],
+    [0.75, 0.52, 0.3, 0.31],
+    [0.45, 0.52, -0.5, 0.2],
+    [-0.65, 0.52, -0.28, 0.19],
+  ];
+
   return (
     <group position={position}>
       <mesh position={[0, 0, 0]} castShadow receiveShadow>
@@ -113,13 +121,7 @@ function FloatingIsland({ position, tint }: {
         <cylinderGeometry args={[1.78, 1.65, 0.18, 9]} />
         <meshStandardMaterial color="#425b69" roughness={1} flatShading />
       </mesh>
-      {[
-        [-0.9, 0.52, 0.45, 0.36],
-        [-0.25, 0.52, -0.72, 0.25],
-        [0.75, 0.52, 0.3, 0.31],
-        [0.45, 0.52, -0.5, 0.2],
-        [-0.65, 0.52, -0.28, 0.19],
-      ].map(([x, y, z, s], i) => (
+      {tufts.map(([x, y, z, s], i) => (
         <mesh key={i} position={[x, y, z]} scale={s} castShadow>
           <dodecahedronGeometry args={[1, 0]} />
           <meshStandardMaterial
